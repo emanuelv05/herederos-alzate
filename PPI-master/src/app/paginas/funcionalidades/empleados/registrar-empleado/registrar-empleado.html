@@ -1,0 +1,169 @@
+<div class="employee-page">
+
+  <div class="title-row">
+    <span class="title-icon-badge">
+      <lucide-icon [img]="UserPlus" class="title-icon"></lucide-icon>
+    </span>
+    <h1 class="title">Registrar empleado</h1>
+  </div>
+
+  <div class="form-container">
+    <div class="form-card">
+
+      <form [formGroup]="employeeForm" (ngSubmit)="submit()">
+
+        <!-- FILA 1 -->
+        <div class="row">
+          <div class="input-group">
+            <div class="floating-field">
+              <input type="text" formControlName="nombreCompleto" placeholder=" ">
+              <label>Nombre completo</label>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="floating-field">
+              <input type="text" formControlName="apellidoCompleto" placeholder=" ">
+              <label>Apellido completo</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILA 2 -->
+        <div class="row">
+          <div class="input-group">
+            <div class="floating-field">
+              <input type="text" formControlName="usuario" placeholder=" ">
+              <label>Usuario</label>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="floating-field password-box">
+              <input
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="contrasena"
+                placeholder=" "
+              >
+
+              <label>Contraseña</label>
+
+              <button
+                type="button"
+                class="eye-btn"
+                (click)="togglePassword()"
+              >
+                <lucide-icon
+                  [img]="showPassword ? EyeOff : Eye"
+                  class="eye-icon"
+                ></lucide-icon>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FILA 3 -->
+        <div class="row">
+          <div class="input-group">
+            <div class="floating-field">
+              <input type="date" formControlName="fechaIngreso" [min]="minDateValue" placeholder=" ">
+              <label>Fecha ingreso</label>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="floating-field password-box">
+              <input
+                [type]="showConfirmPassword ? 'text' : 'password'"
+                formControlName="confirmarContrasena"
+                placeholder=" "
+              >
+
+              <label>Confirmar contraseña</label>
+
+              <button
+                type="button"
+                class="eye-btn"
+                (click)="toggleConfirmPassword()"
+              >
+                <lucide-icon
+                  [img]="showConfirmPassword ? EyeOff : Eye"
+                  class="eye-icon"
+                ></lucide-icon>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FILA 4 -->
+        <div class="row">
+          <div class="input-group">
+            <div class="floating-field">
+              <input 
+                type="text" 
+                formControlName="cedula"
+                inputmode="numeric"
+                (input)="onCedulaInput($event)"
+                placeholder=" ">
+              <label>Cédula</label>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <div class="floating-field">
+              <input type="email" formControlName="correoPersonal" placeholder=" ">
+              <label>Correo personal</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTON -->
+        <div class="btn-container">
+          <button type="button" class="btn-cancel" (click)="cancelar()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-register">
+            Registrar
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE RESULTADO -->
+  <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" [ngClass]="modalType === 'success' ? 'modal-success' : 'modal-error'" (click)="$event.stopPropagation()">
+      
+      <!-- Icono -->
+      <div class="modal-icon">
+        <lucide-icon 
+          *ngIf="modalType === 'success'"
+          [img]="CheckCircle" 
+          class="icon-success">
+        </lucide-icon>
+        <lucide-icon 
+          *ngIf="modalType === 'error'"
+          [img]="AlertCircle" 
+          class="icon-error">
+        </lucide-icon>
+      </div>
+
+      <!-- Título -->
+      <h2 class="modal-title">{{ modalTitle }}</h2>
+
+      <!-- Mensaje -->
+      <p class="modal-message" [innerHTML]="modalMessage.split('\n').join('<br>')"></p>
+
+      <!-- Botón de cerrar -->
+      <button class="modal-close-btn" (click)="closeModal()">
+        {{ modalType === 'success' ? 'Aceptar' : 'Entendido' }}
+      </button>
+
+    </div>
+  </div>
+
+</div>

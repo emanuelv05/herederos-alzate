@@ -1,0 +1,49 @@
+<div class="add-entry-backdrop" (click)="onClose()">
+  <section class="add-entry-card" (click)="$event.stopPropagation()">
+    <header class="card-header">
+      <div class="card-title">
+        <span class="icon-badge">
+          <lucide-icon [img]="Briefcase" class="title-icon"></lucide-icon>
+        </span>
+        <div><h3>Registrar Entrada</h3></div>
+      </div>
+      <button class="icon-btn" type="button" (click)="onClose()">
+        <lucide-icon [img]="X" class="close-icon"></lucide-icon>
+      </button>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="form-grid">
+      <label class="field">
+        <span>Calzado</span>
+        <select [(ngModel)]="form.id_variante">
+          <option [ngValue]="null" disabled>Selecciona un calzado</option>
+          <option *ngFor="let c of calzados" [ngValue]="c.id_variante">
+            {{ c.nombre }}
+          </option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Cantidad</span>
+        <input type="number" min="1" placeholder="0" [(ngModel)]="form.cantidad">
+      </label>
+
+      <label class="field">
+        <span>Fecha de movimiento</span>
+        <input type="date" [(ngModel)]="form.fecha_movimiento">
+      </label>
+
+      <label class="field full">
+        <span>Observaciones</span>
+        <textarea rows="4" placeholder="Detalle adicional de la entrada" [(ngModel)]="form.descripcion"></textarea>
+      </label>
+    </div>
+
+    <footer class="form-actions">
+      <button class="btn btn-ghost" type="button" (click)="onClose()">Cancelar</button>
+      <button class="btn btn-primary" type="button" (click)="guardar()">Guardar</button>
+    </footer>
+  </section>
+</div>

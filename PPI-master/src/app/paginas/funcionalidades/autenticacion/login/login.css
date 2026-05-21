@@ -1,0 +1,211 @@
+/* la pagina central (solo pagina) */
+.page {
+  min-height: 100vh;
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+
+/* Contenedor azul central */
+.blue-container {
+  width: 100%;
+  max-width: 450px; /* más delgado */
+  background: #0071bc;
+  padding: 40px 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* color yla letra del bienvenido */
+.login-header {
+  margin-bottom: 25px;
+  color: white;
+}
+/* El tamaño del logo */
+.logo-img {
+  width: 110px;
+  margin-bottom: 10px;
+}
+/* tamaño de bienvenido */
+.login-header h1 {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+/* tamaño de inicie sesión */
+.login-header p {
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+/* contenedor blanco */
+.login-card {
+  background: white;
+  padding: 35px;
+  border-radius: 15px;
+  box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* FORM */
+.form-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* INPUTS */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 10px 45px; /* espacio para iconos */
+  border: 1px solid #aaa;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-wrapper input:focus {
+  border-color: #007f9c;
+  box-shadow: 0px 0px 5px rgba(0, 127, 156, 0.5);
+}
+
+/* ICONO IZQUIERDA */
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  color: #666;
+}
+
+/* BOTÓN OJITO */
+.eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.eye-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  color: #666;
+}
+
+/* CHECKBOX */
+.options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: #444;
+}
+
+.forgot-link {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: #0071bc;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.forgot-link:hover {
+  opacity: 0.8;
+}
+
+.forgot-link:focus-visible {
+  outline: 2px solid #4e8dff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.forgot-feedback {
+  margin: -12px 0 16px;
+  text-align: left;
+  font-size: 12px;
+  color: #0a7b3a;
+}
+
+.forgot-feedback.error {
+  color: #c23c3c;
+}
+
+/* BOTÓN */
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #0071bc;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-login:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .blue-container {
+    padding: 30px 15px;
+    max-width: 100%;
+  }
+
+  .login-card {
+    padding: 24px 20px;
+  }
+
+  .login-header h1 {
+    font-size: 24px;
+  }
+}
+
+/* Truco para enmascarar contraseñas sin que Chrome las detecte */
+.password-masked {
+  -webkit-text-security: disc;
+}

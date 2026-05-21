@@ -1,0 +1,125 @@
+<div class="movimiento-stock-wrap">
+  <div class="hero-card">
+    <div class="hero-content">
+      <h1>Movimientos de Stock</h1>
+      <p>Registra entradas y salidas de inventario</p>
+    </div>
+  </div>
+
+  <div class="search-section-wrapper">
+    <div class="search-container">
+      <div class="search-box">
+        <lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+        <input type="text" [(ngModel)]="busquedaModelo" placeholder="Buscar por modelo de calzado...">
+      </div>
+
+      <button class="btn btn-filter" (click)="toggleFilters()" [class.active-toggle]="showFilters">
+        <lucide-icon [img]="ListFilter" class="btn-icon"></lucide-icon>
+        <span>Filtros</span>
+        <span class="filter-badge" *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }}</span>
+      </button>
+    </div>
+
+    <!-- Panel de Filtros Desplegable -->
+    <div class="filters-panel" *ngIf="showFilters">
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label>Desde Fecha</label>
+          <input type="date" [(ngModel)]="filtroFechaDesde">
+        </div>
+
+        <div class="filter-group">
+          <label>Hasta Fecha</label>
+          <input type="date" [(ngModel)]="filtroFechaHasta">
+        </div>
+
+        <div class="filter-group">
+          <label>Tipo de Movimiento</label>
+          <select [(ngModel)]="filtroTipo">
+            <option value="">Todos</option>
+            <option value="ENTRADA">Entrada</option>
+            <option value="SALIDA">Salida</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Usuario Responsable</label>
+          <select [(ngModel)]="filtroUsuario">
+            <option value="">Todos</option>
+            @for (usuario of usuariosUnicos; track usuario) {
+              <option [value]="usuario">{{ usuario }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="filter-group reset-group">
+          <button class="btn-reset" (click)="resetFilters()">
+            <lucide-icon [img]="RotateCcw" class="reset-icon"></lucide-icon>
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="historial-card">
+    <div class="historial-header">
+      <h2>Historial de Movimientos</h2>
+      <div class="hero-mini-actions">
+        <button class="btn btn-minimal" type="button" (click)="openAddEntry()">
+          <lucide-icon [img]="Plus" class="btn-icon"></lucide-icon>
+          Registrar Entrada
+        </button>
+        <button class="btn btn-minimal" type="button" (click)="openAddOutput()">
+          <lucide-icon [img]="Minus" class="btn-icon"></lucide-icon>
+          Registrar Salida
+        </button>
+      </div>
+    </div>
+
+    <div class="table-shell">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Tipo</th>
+              <th>Modelo</th>
+              <th>Talla</th>
+              <th>Cantidad</th>
+              <th>Usuario</th>
+              <th>Observaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (mov of movimientosFiltrados; track mov.id) {
+              <tr>
+                <td class="fecha">{{ mov.fecha }}</td>
+                <td>
+                  <span class="badge" [class.entrada]="mov.tipo === 'ENTRADA'" [class.salida]="mov.tipo === 'SALIDA'">
+                    {{ mov.tipo }}
+                  </span>
+                </td>
+                <td class="modelo">{{ mov.modelo }}</td>
+                <td>{{ mov.talla }}</td>
+                <td [class.cantidad-positiva]="mov.cantidad > 0" [class.cantidad-negativa]="mov.cantidad < 0">
+                  {{ mov.cantidad > 0 ? '+' : '' }}{{ mov.cantidad }}
+                </td>
+                <td>{{ mov.usuario }}</td>
+                <td class="observaciones">{{ mov.observaciones }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  @if (showAddEntry) {
+    <app-agregar-entrada (close)="closeAddEntry()"></app-agregar-entrada>
+  }
+
+  @if (showAddOutput) {
+    <app-agregar-salida (close)="closeAddOutput()"></app-agregar-salida>
+  }
+</div>

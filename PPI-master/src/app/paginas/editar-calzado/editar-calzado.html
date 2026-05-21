@@ -1,0 +1,142 @@
+<div class="employee-page">
+  <h1 class="title">Edición de Calzado</h1>
+  <p class="subtitle">Gestiona y actualiza el inventario de calzado desde una sola vista.</p>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div class="search-container">
+    <div class="search-box">
+      <lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+      <input type="text" placeholder="Buscar por código o modelo..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="statusFilter">
+        <option value="Todos">Todos los estados</option>
+        <option value="En Stock">En Stock</option>
+        <option value="Stock Bajo">Stock Bajo</option>
+        <option value="Sin Stock">Sin Stock</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Modelo</th>
+          <th>Categoría</th>
+          <th>Talla</th>
+          <th>Color</th>
+          <th>Stock</th>
+          <th>Proveedor</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let shoe of filteredShoes">
+
+          <!-- Fila principal -->
+          <tr [class.row-editing]="editShoeId === shoe.id">
+            <td class="strong">#{{ shoe.codigo }}</td>
+            <td class="strong">{{ shoe.modelo }}</td>
+            <td>{{ shoe.categoria }}</td>
+            <td>{{ shoe.talla }}</td>
+            <td>{{ shoe.color }}</td>
+            <td [class]="getStockClass(shoe.stock)">{{ shoe.stock }}</td>
+            <td>{{ shoe.proveedor }}</td>
+            <td>
+              <span [class]="'status-pill ' + getStatusClass(shoe.estado)">
+                {{ shoe.estado }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button
+                type="button"
+                class="btn-icon-action"
+                [class.active]="editShoeId === shoe.id"
+                (click)="editRow(shoe)"
+                title="Editar"
+              >
+                <lucide-icon [img]="Pencil"></lucide-icon>
+              </button>
+              <button
+                type="button"
+                class="btn-icon-action btn-icon-delete"
+                (click)="deleteRow(shoe)"
+                title="Eliminar"
+              >
+                <lucide-icon [img]="Trash2"></lucide-icon>
+              </button>
+            </td>
+          </tr>
+
+          <!-- Fila desplegable de edición -->
+          <tr class="edit-dropdown-row" *ngIf="showEditMenu && editShoeId === shoe.id">
+            <td colspan="9">
+              <div class="edit-dropdown">
+                <div class="edit-dropdown-header">Editar Calzado</div>
+
+                <div class="edit-grid">
+
+                  <div class="input-group">
+                    <label>Código (No Editable)</label>
+                    <input type="text" [(ngModel)]="editForm.codigo" readonly />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Modelo</label>
+                    <input type="text" [(ngModel)]="editForm.modelo" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Categoría</label>
+                    <select [(ngModel)]="editForm.id_categoria">
+                      <option *ngFor="let cat of categorias" [ngValue]="cat.id_categoria">
+                        {{ cat.nombre_categoria }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="input-group">
+                    <label>Talla</label>
+                    <input type="number" [(ngModel)]="editForm.talla" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Color</label>
+                    <input type="text" [(ngModel)]="editForm.color" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Stock (Piezas)</label>
+                    <input type="number" [(ngModel)]="editForm.stock" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Proveedor</label>
+                    <select [(ngModel)]="editForm.id_proveedor">
+                      <option *ngFor="let prov of proveedores" [ngValue]="prov.id_proveedor">
+                        {{ prov.nombre_proveedor }}
+                      </option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div class="edit-actions">
+                  <button type="button" class="btn-cancel" (click)="closeEditMenu()">Cancelar</button>
+                  <button type="button" class="btn-save" (click)="saveEditMenu()">Guardar cambios</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

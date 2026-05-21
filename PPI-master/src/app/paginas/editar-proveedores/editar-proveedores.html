@@ -1,0 +1,135 @@
+<div class="employee-page">
+  <h1 class="title">Edición de Proveedores</h1>
+  <p class="subtitle">Gestiona la información de contacto y detalles de tus proveedores aliados.</p>
+
+  <div class="search-container">
+    <div class="search-box">
+      <lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+      <input type="text" placeholder="Buscar por código, empresa o contacto..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="statusFilter">
+        <option value="Todos">Todos los estados</option>
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="selection-bar" *ngIf="selectedCount > 0">
+    <span>{{ selectedCount }} proveedor(es) seleccionado(s)</span>
+
+    <div class="selection-actions">
+      <button type="button" class="btn-edit" (click)="editSelected()" *ngIf="canEditSelection">
+        <lucide-icon [img]="Pencil" class="btn-icon"></lucide-icon>
+        Editar
+      </button>
+
+      <button type="button" class="btn-delete" (click)="deleteSelected()">
+        <lucide-icon [img]="Trash2" class="btn-icon"></lucide-icon>
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-check">
+            <input
+              type="checkbox"
+              [checked]="allFilteredSelected"
+              [disabled]="showEditMenu"
+              (change)="toggleSelectAll($event)"
+            />
+          </th>
+          <th>Código</th>
+          <th>Empresa</th>
+          <th>Contacto</th>
+          <th>Teléfono</th>
+          <th>Email</th>
+          <th>Ciudad</th>
+          <th>Productos</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let prov of filteredProviders">
+          <tr>
+            <td class="col-check">
+              <input
+                type="checkbox"
+                [checked]="selectedIds.has(prov.id)"
+                [disabled]="showEditMenu && editProviderId !== prov.id"
+                (change)="toggleSelection(prov.id, $event)"
+              />
+            </td>
+
+            <td class="strong">#{{ prov.codigo }}</td>
+            <td class="strong">{{ prov.empresa }}</td>
+            <td>{{ prov.contacto }}</td>
+            <td>{{ prov.telefono }}</td>
+            <td>{{ prov.email }}</td>
+            <td>{{ prov.ciudad }}</td>
+            <td>{{ prov.productos }}</td>
+            <td>
+              <span [class]="'status-pill ' + getStatusClass(prov.estado)">
+                {{ prov.estado }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Fila Desplegable de Edición -->
+          <tr class="edit-dropdown-row" *ngIf="showEditMenu && editProviderId === prov.id">
+            <td></td>
+            <td colspan="8">
+              <div class="edit-dropdown">
+                <div class="edit-dropdown-header">Editar Proveedor</div>
+
+                <div class="edit-grid">
+                  <div class="input-group">
+                    <label>Código (No Editable)</label>
+                    <input type="text" [(ngModel)]="editForm.codigo" readonly />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Empresa</label>
+                    <input type="text" [(ngModel)]="editForm.empresa" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Contacto Principal</label>
+                    <input type="text" [(ngModel)]="editForm.contacto" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Teléfono</label>
+                    <input type="text" [(ngModel)]="editForm.telefono" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" [(ngModel)]="editForm.email" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Ciudad</label>
+                    <input type="text" [(ngModel)]="editForm.ciudad" />
+                  </div>
+                </div>
+
+                <div class="edit-actions">
+                  <button type="button" class="btn-cancel" (click)="closeEditMenu()">Cancelar</button>
+                  <button type="button" class="btn-save" (click)="saveEditMenu()">Guardar cambios</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

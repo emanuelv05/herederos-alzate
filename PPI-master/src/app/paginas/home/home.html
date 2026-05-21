@@ -1,0 +1,156 @@
+<main class="dashboard-wrap">
+  <section class="hero-card">
+    <div>
+      <h1>Control de Inventario</h1>
+      <p>Bienvenido a HEREDEROS ALZATE</p>
+    </div>
+    
+  </section>
+
+  <section class="top-overview">
+    <div class="stats-block">
+      @if (stats.length === 0) {
+        <div class="stats-grid stats-grid-2">
+          <div class="stat-card skeleton" *ngFor="let i of [1,2]"></div>
+        </div>
+        <div class="stats-grid stats-grid-2">
+          <div class="stat-card skeleton" *ngFor="let i of [1,2]"></div>
+        </div>
+      } @else {
+        <div class="stats-grid stats-grid-2">
+          <article 
+            class="stat-card interactive" 
+            *ngFor="let stat of stats | slice:0:2"
+            [class.active]="filtroActual === stat.label"
+            (click)="cambiarFiltro(stat.label)">
+            <div class="stat-head">
+              <span class="stat-label">{{ stat.label }}</span>
+              <span class="stat-icon" [ngClass]="getStatToneClass(stat.tone)">
+                <lucide-icon [img]="stat.icon"></lucide-icon>
+              </span>
+            </div>
+            <p class="stat-value">{{ stat.value }}</p>
+            <div class="active-indicator" *ngIf="filtroActual === stat.label"></div>
+          </article>
+        </div>
+
+        <div class="stats-grid stats-grid-2">
+          <article 
+            class="stat-card interactive" 
+            *ngFor="let stat of stats | slice:2:4"
+            [class.active]="filtroActual === stat.label"
+            (click)="cambiarFiltro(stat.label)">
+            <div class="stat-head">
+              <span class="stat-label">{{ stat.label }}</span>
+              <span class="stat-icon" [ngClass]="getStatToneClass(stat.tone)">
+                <lucide-icon [img]="stat.icon"></lucide-icon>
+              </span>
+            </div>
+            <p class="stat-value">{{ stat.value }}</p>
+            <div class="active-indicator" *ngIf="filtroActual === stat.label"></div>
+          </article>
+        </div>
+      }
+    </div>
+
+    <section class="panel-card movements-top">
+      <div class="panel-header panel-header-row">
+        <h2>
+          <lucide-icon [img]="Package"></lucide-icon>
+          Actividad Reciente
+        </h2>
+        <button type="button" class="btn btn-amber" (click)="verHistorialCompleto()">Historial</button>
+      </div>
+
+      <div class="table-wrap">
+        @if (recentMovements.length > 0) {
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Modelo</th>
+                <th>Cant.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let movement of recentMovements">
+                <td class="fecha-short">{{ movement.fecha | date:'dd/MM' }}</td>
+                <td>
+                  <span class="pill" [ngClass]="getMovementTypeClass(movement.tipo)">{{ movement.tipo }}</span>
+                </td>
+                <td class="modelo-truncated">{{ movement.modelo }}</td>
+                <td>
+                  <span class="strong" [ngClass]="getQuantityClass(movement.cantidad)">{{ movement.cantidad }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        } @else {
+          <div class="empty-dashboard-state">
+            <p>No hay movimientos registrados.</p>
+          </div>
+        }
+      </div>
+    </section>
+  </section>
+
+  <!-- Power BI Data Explorer Box -->
+  <section class="panel-card explorer-box">
+    <div class="panel-header explorer-header">
+      <div class="header-titles">
+        <h2>
+          <lucide-icon [img]="AlertTriangle"></lucide-icon>
+          Explorador de Datos: {{ filtroActual }}
+        </h2>
+        <p class="explorer-subtitle">Visualización detallada de productos filtrados por tarjeta</p>
+      </div>
+      
+      <div class="donut-chart-mini" [style.--p]="donutPercentage">
+        <span class="donut-text">{{ donutPercentage }}%</span>
+      </div>
+    </div>
+
+    <div class="table-wrap table-anim">
+      @if (lowStockItems.length > 0) {
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Modelo</th>
+              <th>Talla</th>
+              <th>Color</th>
+              <th>Existencia</th>
+              <th>Proveedor</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of lowStockItems" class="item-row">
+              <td class="strong">{{ item.codigo }}</td>
+              <td>{{ item.modelo }}</td>
+              <td>{{ item.talla }}</td>
+              <td>{{ item.color }}</td>
+              <td class="stock-alert">{{ item.stock }}</td>
+              <td>{{ item.proveedor }}</td>
+              <td>
+                <span class="pill" [ngClass]="getStockStatusClass(item.estado)">{{ item.estado }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      } @else {
+        <div class="empty-dashboard-state">
+          <lucide-icon [img]="Package" class="success-icon"></lucide-icon>
+          <p>No se encontraron productos en la categoría: <strong>{{ filtroActual }}</strong></p>
+        </div>
+      }
+    </div>
+
+    <div class="panel-footer explorer-footer">
+      <button type="button" class="btn btn-amber" (click)="goToInventory()">Ir al Inventario Completo</button>
+      <span class="items-count">{{ lowStockItems.length }} registros encontrados</span>
+    </div>
+  </section>
+
+</main>

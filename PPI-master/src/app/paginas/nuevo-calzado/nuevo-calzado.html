@@ -1,0 +1,83 @@
+<div class="add-shoe-backdrop" (click)="onClose()">
+  <section class="add-shoe-card" (click)="$event.stopPropagation()">
+    <header class="card-header">
+      <div class="card-title">
+        <span class="icon-badge">
+          <lucide-icon [img]="ShoppingBag" class="title-icon"></lucide-icon>
+        </span>
+        <div>
+          <h3>Nuevo Calzado</h3>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" aria-label="Cerrar" (click)="onClose()">
+        <lucide-icon [img]="X" class="close-icon"></lucide-icon>
+      </button>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="form-grid">
+
+      <label class="field">
+        <span>Código</span>
+        <input type="text" placeholder="Ej: CAL006" [(ngModel)]="form.codigo" (input)="verificarCodigo()" />
+      </label>
+
+      <label class="field" [style.opacity]="modeloEncontrado ? '0.6' : '1'">
+        <span>Modelo <small *ngIf="modeloEncontrado" style="color: #0071bc;">(Auto-completado)</small></span>
+        <input type="text" placeholder="Nombre del modelo" [(ngModel)]="form.modelo" [disabled]="modeloEncontrado" [readonly]="modeloEncontrado" />
+      </label>
+
+      <label class="field" [style.opacity]="modeloEncontrado ? '0.6' : '1'">
+        <span>Categoría <small *ngIf="modeloEncontrado" style="color: #0071bc;">(Auto-completado)</small></span>
+        <select [(ngModel)]="form.id_categoria" [disabled]="modeloEncontrado" (click)="$event.stopPropagation()">
+          <option *ngFor="let cat of categorias" [ngValue]="cat.id_categoria">
+            {{ cat.nombre_categoria }}
+          </option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Talla</span>
+        <select [(ngModel)]="form.talla" (click)="$event.stopPropagation()">
+          <option value="">Seleccionar talla</option>
+          <option value="36">36</option>
+          <option value="37">37</option>
+          <option value="38">38</option>
+          <option value="39">39</option>
+          <option value="40">40</option>
+          <option value="41">41</option>
+          <option value="42">42</option>
+          <option value="43">43</option>
+          <option value="44">44</option>
+          <option value="45">45</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Color</span>
+        <input type="text" placeholder="Color del calzado" [(ngModel)]="form.color" />
+      </label>
+
+      <label class="field">
+        <span>Stock</span>
+        <input type="number" min="0" placeholder="0" [(ngModel)]="form.stock_actual" />
+      </label>
+
+      <label class="field">
+        <span>Proveedor</span>
+        <select [(ngModel)]="form.id_proveedor" (click)="$event.stopPropagation()">
+          <option *ngFor="let prov of proveedores" [ngValue]="prov.id_proveedor">
+            {{ prov.nombre_proveedor }}
+          </option>
+        </select>
+      </label>
+
+    </div>
+
+    <footer class="form-actions">
+      <button class="btn btn-ghost" type="button" (click)="onClose()">Cancelar</button>
+      <button class="btn btn-primary" type="button" (click)="agregar()">Agregar</button>
+    </footer>
+  </section>
+</div>

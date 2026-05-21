@@ -1,0 +1,126 @@
+<div class="profile-container">
+  <div class="profile-hero-card">
+    <div class="hero-content">
+      <h1>Perfil de Usuario</h1>
+      <p>Gestiona tu información personal y configuración de cuenta.</p>
+    </div>
+  </div>
+
+  @if (profile) {
+    <div class="profile-content-wrapper">
+      
+      <!-- Sidebar del Perfil -->
+      <div class="profile-sidebar">
+        <div class="avatar-container">
+          <div class="avatar-circle">
+            <span>{{ profile.nombreCompleto?.charAt(0) || 'U' }}{{ profile.apellidoCompleto?.charAt(0) || '' }}</span>
+          </div>
+        </div>
+        
+        <h2 class="profile-name">{{ profile.nombreCompleto }} {{ profile.apellidoCompleto }}</h2>
+        <p class="profile-role">{{ profile.rol }}</p>
+
+        <div class="profile-quick-stats">
+          <div class="stat-item">
+            <lucide-icon [img]="Building" class="stat-icon"></lucide-icon>
+            <span>{{ profile.rol }}</span>
+          </div>
+          <div class="stat-item">
+            <lucide-icon [img]="Calendar" class="stat-icon"></lucide-icon>
+            <span>Ingreso: {{ profile.fechaIngreso }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta Principal de Información -->
+      <div class="profile-main-card">
+        <div class="card-header">
+          <h3>Información Personal</h3>
+          
+          @if (!isEditing && !isUsuario()) {
+            <button type="button" class="btn-edit-mode" (click)="toggleEdit()">
+              <lucide-icon [img]="Edit2" class="btn-icon"></lucide-icon>
+              Modificar Datos
+            </button>
+          } @else if (isEditing && !isUsuario()) {
+            <div class="edit-actions">
+              <button type="button" class="btn-cancel" (click)="toggleEdit()">
+                <lucide-icon [img]="X" class="btn-icon"></lucide-icon>
+                Cancelar
+              </button>
+              <button type="button" class="btn-save" (click)="saveProfile()">
+                <lucide-icon [img]="Save" class="btn-icon"></lucide-icon>
+                Guardar
+              </button>
+            </div>
+          }
+        </div>
+
+        <div class="card-body">
+          
+          <!-- VISTA DE SOLO LECTURA -->
+          @if (!isEditing) {
+            <div class="info-grid">
+              <div class="info-group">
+                <span class="info-label">Nombres</span>
+                <span class="info-value">{{ profile.nombreCompleto }}</span>
+              </div>
+              
+              <div class="info-group">
+                <span class="info-label">Apellidos</span>
+                <span class="info-value">{{ profile.apellidoCompleto }}</span>
+              </div>
+              
+              <div class="info-group">
+                <span class="info-label">Usuario</span>
+                <span class="info-value">{{ profile.usuario }}</span>
+              </div>
+
+              <div class="info-group">
+                <span class="info-label">Cédula de Ciudadanía</span>
+                <span class="info-value">{{ profile.cedula }}</span>
+              </div>
+
+              <div class="info-group" style="grid-column: span 2;">
+                <span class="info-label">Correo Electrónico</span>
+                <span class="info-value">{{ profile.correoPersonal }}</span>
+              </div>
+            </div>
+          } @else {
+            <!-- FORMULARIO DE EDICIÓN -->
+            <div class="info-grid edit-mode">
+              <div class="form-group">
+                <label>Nombres</label>
+                <input type="text" [(ngModel)]="editForm.nombreCompleto" class="form-control" />
+              </div>
+              
+              <div class="form-group">
+                <label>Apellidos</label>
+                <input type="text" [(ngModel)]="editForm.apellidoCompleto" class="form-control" />
+              </div>
+
+              <div class="form-group">
+                <label>Usuario <span class="badge-locked">No editable</span></label>
+                <input type="text" [(ngModel)]="editForm.usuario" class="form-control readonly" readonly />
+              </div>
+
+              <div class="form-group">
+                <label>Cédula de Ciudadanía <span class="badge-locked">No editable</span></label>
+                <input type="text" [(ngModel)]="editForm.cedula" class="form-control readonly" readonly />
+              </div>
+
+              <div class="form-group" style="grid-column: span 2;">
+                <label>Correo Electrónico</label>
+                <input type="email" [(ngModel)]="editForm.correoPersonal" class="form-control" />
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 400px; color: #64748b;">
+       <p>Cargando información del perfil...</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,215 @@
+
+<section class="calzado-wrap">
+	<header class="hero-card">
+		<div>
+			<h1>Gestión de Calzado</h1>
+			<p>Administra tu inventario de zapatos</p>
+		</div>
+	</header>
+
+	<section class="shoe-card">
+		<div class="search-section-wrapper">
+			<div class="search-container">
+				<div class="search-box">
+					<lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+					<input type="text" placeholder="Buscar por código o modelo..." [(ngModel)]="searchText" (ngModelChange)="onFilterChange()">
+				</div>
+
+				<button class="btn btn-filter" (click)="toggleFilters()" [class.active-toggle]="showFilters">
+					<lucide-icon [img]="ListFilter" class="btn-icon"></lucide-icon>
+					<span>Filtros</span>
+					<span class="filter-badge" *ngIf="activeFiltersCount > 0">{{ activeFiltersCount }}</span>
+				</button>
+
+				<button *ngIf="!isUsuario()" class="btn btn-ghost btn-add-shoe" type="button" (click)="openAddShoe()">
+					<lucide-icon [img]="Plus" class="btn-icon"></lucide-icon>
+					Nuevo Calzado
+				</button>
+			</div>
+
+			<!-- Panel de Filtros Desplegable -->
+			<div class="filters-panel" *ngIf="showFilters">
+				<div class="filter-grid">
+					<div class="filter-group">
+						<label>Categoría</label>
+						<select [(ngModel)]="selectedCategory" (ngModelChange)="onFilterChange()">
+							<option value="Todas">Todas</option>
+							<option *ngFor="let cat of categorias" [value]="cat.nombre_categoria">
+								{{ cat.nombre_categoria }}
+							</option>
+						</select>
+					</div>
+
+					<div class="filter-group">
+						<label>Talla</label>
+						<select [(ngModel)]="selectedSize" (ngModelChange)="onFilterChange()">
+							<option value="Todas">Todas</option>
+							<option>36</option><option>37</option><option>38</option>
+							<option>39</option><option>40</option><option>41</option>
+							<option>42</option><option>43</option><option>44</option><option>45</option>
+						</select>
+					</div>
+
+					<div class="filter-group">
+						<label>Estado de Stock</label>
+						<select [(ngModel)]="selectedStatus" (ngModelChange)="onFilterChange()">
+							<option value="Todos">Todos</option>
+							<option value="En Stock">En Stock</option>
+							<option value="Stock Bajo">Stock Bajo</option>
+							<option value="Sin Stock">Sin Stock</option>
+						</select>
+					</div>
+
+					<div class="filter-group reset-group">
+						<button class="btn-reset" (click)="resetFilters()">
+							<lucide-icon [img]="RotateCcw" class="reset-icon"></lucide-icon>
+							Limpiar Filtros
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="shoe-table">
+			<table>
+				<thead>
+					<tr>
+						<th>Modelo</th>
+						<th>Categoría</th>
+						<th>Variantes</th>
+						<th class="text-right"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<ng-container *ngFor="let m of paginatedShoes; trackBy: trackById">
+						<!-- Fila Principal (Modelo) -->
+						<tr class="accordion-header" (click)="toggleExpand(m)">
+							<td class="strong">#{{ m.codigo }} - {{ m.modelo }}</td>
+							<td>{{ m.categoria }}</td>
+							<td>
+								<span class="variantes-badge">{{ m.totalVariantes }} variantes activas</span>
+							</td>
+							<td class="text-right">
+								<div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
+									<button *ngIf="!isUsuario()" class="action-btn btn-delete" type="button" (click)="deleteModel(m); $event.stopPropagation()" title="Eliminar todo el modelo">
+										<lucide-icon [img]="Trash2" class="action-icon"></lucide-icon>
+									</button>
+									<lucide-icon [img]="m.expanded ? ChevronDown : ChevronRight" class="expand-icon"></lucide-icon>
+								</div>
+							</td>
+						</tr>
+
+						<!-- Fila Desplegable con Subtabla -->
+						<tr *ngIf="m.expanded" class="accordion-body">
+							<td colspan="4" class="subtable-cell">
+								<table class="subtable">
+									<thead>
+										<tr>
+											<th>Talla</th>
+											<th>Color</th>
+											<th>Stock</th>
+											<th>Proveedor</th>
+											<th>Estado</th>
+											<th *ngIf="!isUsuario()">Acciones</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container *ngFor="let v of m.variantes">
+											<tr [style.background-color]="v.groupColor">
+												<td class="strong">{{ v.talla }}</td>
+												<td>{{ v.color }}</td>
+												<td [class]="getStockClass(v.stock)">{{ v.stock }}</td>
+												<td>{{ v.proveedor }}</td>
+												<td>
+													<span [class]="'status-pill ' + getStatusClass(v.estado)">
+														{{ v.estado }}
+													</span>
+												</td>
+												<td *ngIf="!isUsuario()">
+													<div class="actions">
+														<button class="action-btn btn-edit" type="button" (click)="editShoe(m, v); $event.stopPropagation()">
+															<lucide-icon [img]="Pencil" class="action-icon"></lucide-icon>
+														</button>
+														<button class="action-btn btn-delete" type="button" (click)="deleteShoe(m, v); $event.stopPropagation()">
+															<lucide-icon [img]="Trash2" class="action-icon"></lucide-icon>
+														</button>
+													</div>
+												</td>
+											</tr>
+
+											<!-- Fila Desplegable de Edición -->
+											<tr class="edit-dropdown-row" *ngIf="!isUsuario() && editShoeId === v.id">
+												<td colspan="6" style="padding: 0;">
+													<div class="edit-dropdown" style="margin: 10px;">
+														<div class="edit-dropdown-header">Editar Calzado - Variante seleccionada</div>
+
+														<div class="edit-grid">
+															<div class="input-group">
+																<label>Código (No Editable)</label>
+																<input type="text" [value]="m.codigo" readonly />
+															</div>
+
+															<div class="input-group">
+																<label>Modelo (No Editable)</label>
+																<input type="text" [value]="m.modelo" readonly />
+															</div>
+
+															<div class="input-group">
+																<label>Categoría (No Editable)</label>
+																<input type="text" [value]="m.categoria" readonly />
+															</div>
+
+															<div class="input-group">
+																<label>Talla (No Editable)</label>
+																<input type="text" [value]="editForm.talla" readonly />
+															</div>
+
+															<div class="input-group">
+																<label>Color</label>
+																<input type="text" [(ngModel)]="editForm.color" />
+															</div>
+
+															<div class="input-group">
+																<label>Stock</label>
+																<input type="number" [(ngModel)]="editForm.stock" min="0" />
+															</div>
+
+															<div class="input-group">
+																<label>Proveedor</label>
+																<select [(ngModel)]="editForm.id_proveedor">
+																	<option *ngFor="let prov of proveedores" [ngValue]="prov.id_proveedor">
+																		{{ prov.nombre_proveedor }}
+																	</option>
+																</select>
+															</div>
+														</div>
+
+														<div class="edit-actions">
+															<button type="button" class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+															<button type="button" class="btn-save" (click)="saveEdit()">Guardar cambios</button>
+														</div>
+													</div>
+												</td>
+											</tr>
+										</ng-container>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</ng-container>
+				</tbody>
+			</table>
+
+			<div class="pagination-controls" *ngIf="totalPages > 1">
+				<button class="btn-page" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+				<span class="page-info">Página {{ currentPage }} de {{ totalPages }}</span>
+				<button class="btn-page" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+			</div>
+		</div>
+	</section>
+</section>
+
+@if (showAddShoe) {
+	<app-nuevo-calzado (close)="closeAddShoe()"></app-nuevo-calzado>
+}

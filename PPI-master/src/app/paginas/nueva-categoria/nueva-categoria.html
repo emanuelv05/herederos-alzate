@@ -1,0 +1,41 @@
+<div class="add-category-backdrop" (click)="onClose()">
+  <section class="add-category-card" (click)="$event.stopPropagation()">
+    <header class="card-header">
+      <div class="card-title">
+        <span class="icon-badge">
+          <lucide-icon [img]="Tag" class="title-icon"></lucide-icon>
+        </span>
+        <div>
+          <h3>Agregar Categoría</h3>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" aria-label="Cerrar" (click)="onClose()">
+        <lucide-icon [img]="X" class="close-icon"></lucide-icon>
+      </button>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="form-grid">
+      <label class="field">
+        <span>Código</span>
+        <input type="text" placeholder="Ej: CAT006" [(ngModel)]="form.codigo" />
+      </label>
+
+      <label class="field">
+        <span>Nombre</span>
+        <input type="text" placeholder="Nombre de la categoría" [(ngModel)]="form.nombre_categoria" />
+      </label>
+
+      <label class="field full">
+        <span>Descripción</span>
+        <input type="text" placeholder="Descripción de la categoría" [(ngModel)]="form.descripcion" />
+      </label>
+    </div>
+
+    <footer class="form-actions">
+      <button class="btn btn-ghost" type="button" (click)="onClose()">Cancelar</button>
+      <button class="btn btn-primary" type="button" (click)="agregar()">Agregar</button>
+    </footer>
+  </section>
+</div>

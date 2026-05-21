@@ -1,0 +1,102 @@
+<div class="recovery-page">
+	<div class="left-panel">
+		<div class="left-overlay"></div>
+		<div class="left-content">
+			<div class="logo-badge">
+				<img src="/img/IconoHerederosAlzateLargo.jpg" alt="Herederos Alzate" class="company-logo" />
+			</div>
+			<p class="company-text">
+				Herederos Alzate: tradición e innovación para un estilo único.
+			</p>
+		</div>
+	</div>
+
+	<div class="right-panel">
+		<div class="otp-card">
+
+			<!-- Ícono -->
+			<div class="mail-icon">
+				<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none"
+					stroke="#0071bc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+					<rect width="20" height="16" x="2" y="4" rx="2"/>
+					<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+				</svg>
+			</div>
+
+			<h1>Revisa tu correo</h1>
+			<p class="subtitle">Ingresa el código de <strong>6 dígitos</strong> que te enviamos</p>
+			<p class="mail-dest" *ngIf="mail">Enviado a: <strong>{{ mail }}</strong></p>
+
+			<!-- 6 CAJAS DE DÍGITOS -->
+			<div class="otp-boxes" (paste)="onPaste($event)">
+				<input id="otp-digit-0" type="text" inputmode="numeric" maxlength="1"
+					class="digit-box" [class.filled]="d0"
+					[value]="d0"
+					(input)="onInput($event, 0)"
+					(keydown)="onKeyDown($event, 0)" />
+
+				<input id="otp-digit-1" type="text" inputmode="numeric" maxlength="1"
+					class="digit-box" [class.filled]="d1"
+					[value]="d1"
+					(input)="onInput($event, 1)"
+					(keydown)="onKeyDown($event, 1)" />
+
+				<input id="otp-digit-2" type="text" inputmode="numeric" maxlength="1"
+					class="digit-box" [class.filled]="d2"
+					[value]="d2"
+					(input)="onInput($event, 2)"
+					(keydown)="onKeyDown($event, 2)" />
+
+				<input id="otp-digit-3" type="text" inputmode="numeric" maxlength="1"
+					class="digit-box" [class.filled]="d3"
+					[value]="d3"
+					(input)="onInput($event, 3)"
+					(keydown)="onKeyDown($event, 3)" />
+
+				<input id="otp-digit-4" type="text" inputmode="numeric" maxlength="1"
+					class="digit-box" [class.filled]="d4"
+					[value]="d4"
+					(input)="onInput($event, 4)"
+					(keydown)="onKeyDown($event, 4)" />
+
+				<input id="otp-digit-5" type="text" inputmode="numeric" maxlength="1"
+					class="digit-box" [class.filled]="d5"
+					[value]="d5"
+					(input)="onInput($event, 5)"
+					(keydown)="onKeyDown($event, 5)" />
+			</div>
+
+			<!-- ACCIONES -->
+			<div class="actions">
+				<button type="button" class="btn-back" (click)="volverLogin()">Volver</button>
+				<button type="button" class="btn-verify"
+					[disabled]="!codigoValido"
+					[class.disabled]="!codigoValido"
+					(click)="verificarCodigo()">
+					Verificar
+				</button>
+			</div>
+
+			<!-- FEEDBACK -->
+			<p class="feedback"
+				[class.error]="feedbackType === 'error'"
+				[class.success]="feedbackType === 'success'"
+				[class.info]="feedbackType === 'info'"
+				*ngIf="feedback">
+				{{ feedback }}
+			</p>
+
+			<!-- SECCIÓN REENVIAR -->
+			<div class="reenvio-section">
+				<p class="reenvio-text">¿No te llegó el código?</p>
+				<button type="button" class="btn-reenviar"
+					[disabled]="reenvioEnCooldown"
+					(click)="reenviarCodigo()">
+					<span *ngIf="!reenvioEnCooldown">Reenviar código</span>
+					<span *ngIf="reenvioEnCooldown">Reenviar en {{ cooldownSegundos }}s</span>
+				</button>
+			</div>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,17 @@
+# Variables de entorno - NUNCA subir a GitHub
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+*.egg-info/
+
+# Django
+*.log
+db.sqlite3
+
+# Node
+node_modules/
+dist/

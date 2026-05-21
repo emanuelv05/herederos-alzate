@@ -1,0 +1,84 @@
+<div class="page">
+  <div class="blue-container">
+
+    <!-- LOGO -->
+    <div class="login-header">
+      <img src="/img/LogoAzulHA.jpg" alt="Herederos Alzate" class="logo-img">
+      <h1>BIENVENIDO</h1>
+      <p>Inicie sesión</p>
+    </div>
+
+    <!-- CARD BLANCA -->
+    <div class="login-card">
+      <form [formGroup]="loginForm" (ngSubmit)="submit()" autocomplete="off">
+
+        <!-- USERNAME -->
+        <div class="form-group">
+          <label for="username">Usuario</label>
+
+          <div class="input-wrapper">
+            <lucide-icon class="input-icon" [img]="User"></lucide-icon>
+
+            <input 
+              type="text"
+              id="username"
+              formControlName="username"
+              placeholder="Usuario"
+              autocomplete="one-time-code"
+            />
+          </div>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+
+          <div class="input-wrapper">  
+            <lucide-icon class="input-icon" [img]="Lock"></lucide-icon>
+
+            <input 
+              type="text"
+              id="password"
+              formControlName="password"
+              placeholder="********"
+              autocomplete="one-time-code"
+              [class.password-masked]="!showPassword"
+            />
+
+            <button type="button" class="eye-btn" (click)="togglePasswordVisibility()">
+              <lucide-icon 
+                [img]="showPassword ? EyeOff : Eye"
+                class="eye-icon">
+              </lucide-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- REMEMBER -->
+        <div class="options-row">
+          <div class="remember">
+            <input type="checkbox" id="remember" formControlName="remember" />
+            <label for="remember">Recordarme</label>
+          </div>
+
+          <button type="button" class="forgot-link" (click)="forgotPassword()">¿Olvidaste tu contraseña?</button>
+        </div>
+
+        <p class="forgot-feedback" [class.error]="forgotFeedbackType === 'error'" *ngIf="forgotFeedback">
+          {{ forgotFeedback }}
+        </p>
+
+        <p class="forgot-feedback error" *ngIf="loginError">
+          {{ loginError }}
+        </p>
+
+        <!-- BUTTON -->
+        <button type="submit" class="btn-login">
+          Iniciar Sesión
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</div>

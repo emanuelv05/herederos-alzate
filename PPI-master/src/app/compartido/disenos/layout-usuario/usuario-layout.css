@@ -1,0 +1,68 @@
+.layout-wrapper {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+/* Banner superior */
+.header-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45px;
+  background: #303030;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0%;
+}
+
+/* Imagen del banner */
+.banner-img {
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  padding-top: 135px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 0;
+  transition: margin-left 0.25s ease;
+  margin-left: 0;
+  background: white;
+}
+
+.main-content.sidebar-expanded {
+  margin-left: 320px;
+}
+
+@media (max-width: 900px) {
+  .main-content.sidebar-expanded {
+    margin-left: 0;
+  }
+
+  .main-content {
+    padding-top: 125px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .main-content {
+    padding-top: 125px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}

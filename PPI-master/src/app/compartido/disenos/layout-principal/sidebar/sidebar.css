@@ -1,0 +1,294 @@
+.sidebar-shell {
+  position: fixed;
+  top: 115px;
+  left: 0;
+  bottom: 0;
+  z-index: 1990;
+  pointer-events: all;
+}
+
+.sidebar-compact {
+  width: 74px;
+  height: 100%;
+  background: #eceff3;
+  border-right: 1px solid #d6dbe3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 10px;
+}
+
+.compact-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.compact-separator {
+  width: 40px;
+  height: 1px;
+  background-color: #d6dbe3;
+  margin: 6px 0;
+}
+
+.compact-btn {
+  width: 52px;
+  height: 52px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #8b95a6;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.compact-btn:hover,
+.compact-btn.active {
+  background: #dde3eb;
+  color: #338dc9;
+}
+
+.compact-btn.active .compact-icon {
+  color: #338dc9;
+}
+
+.compact-icon {
+  width: 22px;
+  height: 22px;
+  color: #8b95a6;
+}
+
+/* Sidebar */
+.sidebar {
+  pointer-events: all;
+  height: 100%;
+  width: 320px;
+  background: #f3f5f8;
+  border-right: 1px solid #d6dbe3;
+  box-shadow: 6px 0 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.sidebar-header {
+  height: 70px;
+  padding: 0 18px;
+  background: #f3f5f8;
+  border-bottom: 1px solid #d6dbe3;
+
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #2f3747;
+  font-weight: bold;
+}
+
+/* Sección usuario */
+.sidebar-user {
+  padding: 18px;
+  background: #f3f5f8;
+  border-bottom: 1px solid #d6dbe3;
+}
+
+.user-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Avatar */
+.user-avatar {
+  position: relative;
+  width: 55px;
+  height: 55px;
+  background: linear-gradient(135deg, #338dc9, #0071bc);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icono dentro del avatar */
+.avatar-icon {
+margin-left: 6px;
+margin-top: 3px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  color: white;
+  transform: translate(-50%, -50%);
+}
+
+.avatar-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Info */
+.user-info h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: bold;
+  color: #2f3747;
+}
+
+.user-role {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #667084;
+  font-weight: 500;
+}
+
+/* Menú */
+.sidebar-menu {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu-section-title {
+  margin: 4px 4px 2px;
+  color: #667084;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Botón menú */
+.menu-btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 14px 18px;
+  border-radius: 12px;
+  color: #2f3747;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: 0.2s;
+  text-align: left;
+}
+
+.menu-btn:hover,
+.menu-btn.active {
+  background: #dde3eb;
+  color: #338dc9;
+}
+
+.menu-btn.active .menu-icon {
+  color: #338dc9;
+}
+
+/* Icono del botón */
+.menu-icon {
+  width: 22px;
+  height: 22px;
+  color: #8b95a6;
+}
+
+@media (max-width: 900px) {
+  .sidebar-shell {
+    z-index: 2100;
+  }
+
+  .sidebar-shell::before {
+    content: '';
+    position: fixed;
+    top: 115px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .sidebar-shell.expanded {
+    pointer-events: all;
+  }
+
+  .sidebar-shell.expanded::before {
+    opacity: 1;
+  }
+
+  .sidebar-compact {
+    display: none;
+  }
+
+  .sidebar {
+    width: min(84vw, 320px);
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar-shell.expanded .sidebar {
+    transform: translateX(0);
+  }
+}
+
+/* Tooltip System */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:before,
+[data-tooltip]:after {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-10px);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  z-index: 2000;
+}
+
+[data-tooltip]:before {
+  content: "";
+  border: 6px solid transparent;
+  border-right-color: #1e293b;
+  left: calc(100% - 2px);
+}
+
+[data-tooltip]:after {
+  content: attr(data-tooltip);
+  background: #1e293b;
+  color: white;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Only show tooltips when sidebar is NOT expanded (compact mode) */
+.expanded [data-tooltip]:before,
+.expanded [data-tooltip]:after {
+  display: none;
+}

@@ -1,0 +1,241 @@
+<div class="facturacion-wrap">
+  <!-- Vista previa de Factura (Ticket) -->
+  @if (facturaSeleccionada) {
+    <div class="factura-overlay">
+      <div class="factura-modal">
+        <!-- Nueva cabecera de acciones dentro del modal -->
+        <div class="factura-header-actions print-hidden">
+          <button class="btn btn-minimal" (click)="cerrarFactura()">
+            <lucide-icon [img]="ArrowLeft" class="btn-icon"></lucide-icon>
+            Volver
+          </button>
+          
+          <div class="header-group">
+            <button class="btn btn-premium-pdf" (click)="exportarPDF()">
+              <lucide-icon [img]="FileDown" class="btn-icon"></lucide-icon>
+              Exportar PDF
+            </button>
+            <button class="btn btn-premium-excel" (click)="exportarExcel()">
+              <lucide-icon [img]="FileSpreadsheet" class="btn-icon"></lucide-icon>
+              Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="ticket-container printable">
+          <div class="ticket-header">
+            <h2>Herederos Alzate</h2>
+            <p class="ticket-subtitle">COMPROBANTE DE REMISIÓN / DESPACHO</p>
+          </div>
+          
+          <div class="ticket-info">
+            <div class="ticket-row">
+              <span>Remisión No:</span>
+              <strong>#{{ facturaSeleccionada.id | number:'3.0' }}</strong>
+            </div>
+            <div class="ticket-row">
+              <span>Fecha:</span>
+              <strong>{{ facturaSeleccionada.fecha }}</strong>
+            </div>
+            <div class="ticket-row">
+              <span>Atendido por:</span>
+              <strong>{{ facturaSeleccionada.usuario }}</strong>
+            </div>
+          </div>
+          
+          <div class="ticket-divider"></div>
+          
+          <div class="ticket-body">
+            <table class="ticket-table">
+              <thead>
+                <tr>
+                  <th style="text-align: left;">CANT</th>
+                  <th style="text-align: left;">PRODUCTO / MODELO</th>
+                  <th style="text-align: right;">TALLA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ facturaSeleccionada.cantidad }}</td>
+                  <td>{{ facturaSeleccionada.modelo }}</td>
+                  <td style="text-align: right;">{{ facturaSeleccionada.talla }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="ticket-divider"></div>
+
+          <div class="ticket-footer">
+            <div class="ticket-obs-box">
+              <div class="ticket-obs-title">Observaciones de Entrega:</div>
+              <p style="margin: 0; color: #475569;">{{ facturaSeleccionada.observaciones || 'Sin observaciones registradas.' }}</p>
+            </div>
+            
+            <p class="ticket-thanks">¡Gracias por preferir Herederos Alzate!</p>
+            
+            <div class="signature-section">
+              <div class="signature-header">
+                <span>Recibido por (Nombre y Firma):</span>
+                @if (!facturaSeleccionada.tiene_firma && modoFirma === 'manual') {
+                  <button type="button" class="btn-clear print-hidden" (click)="limpiarFirma()" title="Borrar firma">
+                    <lucide-icon [img]="Eraser" class="clear-icon"></lucide-icon>
+                    Limpiar
+                  </button>
+                }
+              </div>
+
+              @if (facturaSeleccionada.tiene_firma && firmaGuardada) {
+                <!-- Vista de la firma ya guardada -->
+                @if (firmaGuardada.tipo_firma === 'manual') {
+                  <div class="signature-saved-wrap">
+                    <img [src]="firmaGuardada.firma_base64" alt="Firma" class="saved-signature-img">
+                  </div>
+                } @else {
+                  <div class="signature-virtual-wrap">
+                    <div class="firma-display">{{ firmaGuardada.nombre_firma }}</div>
+                  </div>
+                }
+                
+                <div class="print-hidden" style="text-align: center; margin-top: 15px;">
+                  @if (puedeFirmar) {
+                    <button class="btn" style="background: #f8fafc; color: #338dc9; border: 1px dashed #cbd5e0; width: 100%; font-weight: 600; padding: 0.6rem; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f8fafc'" (click)="habilitarReFirma()">Modificar Firma</button>
+                  }
+                </div>
+              } @else {
+                @if (!puedeFirmar) {
+                  <div class="no-permission-msg" style="text-align: center; padding: 2rem; color: #64748b; background: #f8fafc; border-radius: 8px; margin-top: 1rem;">
+                    <i-lucide name="file-text" style="width: 48px; height: 48px; color: #cbd5e0; margin-bottom: 1rem;"></i-lucide>
+                    <p>Esta factura no ha sido firmada aún.</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">Solo el administrador o el empleado que realizó la remisión ({{ facturaSeleccionada.usuario }}) pueden firmarla.</p>
+                  </div>
+                } @else {
+                  <!-- Selector de modo -->
+                  <div class="signature-selector print-hidden" style="margin-top: 1rem;">
+                  <button [class.active]="modoFirma === 'manual'" (click)="setModoFirma('manual')" class="selector-btn">Firma Manual</button>
+                  <button [class.active]="modoFirma === 'escrita'" (click)="setModoFirma('escrita')" class="selector-btn">Firma Escrita</button>
+                </div>
+
+                @if (modoFirma === 'manual') {
+                  @if (miFirmaManual && !dibujandoNueva) {
+                    <div class="saved-signature-picker" [class.selected]="usarFirmaGuardada" (click)="seleccionarFirmaGuardada()">
+                      <div class="signature-saved-wrap" style="height: 80px;">
+                        <img [src]="miFirmaManual.firma_base64" alt="Mi Firma Manual" class="saved-signature-img">
+                      </div>
+                      <div class="picker-hint">Clic para usar esta firma manual</div>
+                    </div>
+                    <button class="btn btn-minimal print-hidden" (click)="dibujarNueva()" style="margin-top: 10px; width: 100%; color: #338dc9; border-color: #cbd5e0; background: #fff;">O dibujar una nueva</button>
+                  } @else {
+                    <div class="signature-pad-wrap">
+                      <canvas #signatureCanvas class="signature-pad"></canvas>
+                    </div>
+                  }
+                } @else {
+                  @if (miFirmaEscrita && !escribiendoNueva) {
+                    <div class="saved-signature-picker" [class.selected]="usarFirmaGuardada" (click)="seleccionarFirmaGuardada()">
+                      <div class="signature-virtual-wrap" style="height: 80px;">
+                        <div class="firma-display" style="font-size: 1.8rem; margin-bottom: 0;">{{ miFirmaEscrita.nombre_firma }}</div>
+                      </div>
+                      <div class="picker-hint">Clic para usar esta firma escrita</div>
+                    </div>
+                    <button class="btn btn-minimal print-hidden" (click)="escribirNueva()" style="margin-top: 10px; width: 100%; color: #338dc9; border-color: #cbd5e0; background: #fff;">O escribir una nueva</button>
+                  } @else {
+                    <div class="signature-virtual-wrap">
+                      <div class="firma-display">{{ nombreFirma }}</div>
+                      <input 
+                        type="text" 
+                        [(ngModel)]="nombreFirma" 
+                        placeholder="Escribe el nombre aquí..." 
+                        class="input-firma-virtual print-hidden">
+                    </div>
+                  }
+                }
+                <div class="save-signature-action print-hidden" style="margin-top: 1rem; text-align: center;">
+                  <button class="btn btn-premium-excel" [disabled]="guardandoFirma" (click)="guardarFirmaBackend()">
+                    {{ guardandoFirma ? 'Guardando...' : 'Guardar Firma' }}
+                  </button>
+                </div>
+                }
+              }
+              
+              <div class="signature-line"></div>
+            </div>
+
+            <p style="margin-top: 1rem; opacity: 0.6; font-size: 0.7rem;">Documento informativo sin valor contable</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Vista Listado -->
+    <div class="hero-card">
+      <div class="hero-content">
+        <h1>Centro de Facturación</h1>
+        <p>Genera y administra los comprobantes de remisión para las salidas de inventario.</p>
+      </div>
+    </div>
+
+    <div class="filtros-toolbar">
+      <div class="toolbar-search">
+        <lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+        <input type="text" [(ngModel)]="busquedaModelo" placeholder="Filtrar por nombre de modelo...">
+      </div>
+    </div>
+
+    <div class="historial-card">
+      <div class="historial-header">
+        <h2>Salidas de Stock Recientes</h2>
+      </div>
+
+      <div class="table-shell">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>No. Remisión</th>
+                <th>Fecha de Salida</th>
+                <th>Modelo de Calzado</th>
+                <th>Talla</th>
+                <th>Unidades</th>
+                <th>Responsable</th>
+                <th>Gestión</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (mov of salidasFiltradas; track mov.id) {
+                <tr>
+                  <td style="font-weight: 700;">#{{ mov.id | number:'3.0' }}</td>
+                  <td class="fecha">{{ mov.fecha }}</td>
+                  <td class="modelo">{{ mov.modelo }}</td>
+                  <td>{{ mov.talla }}</td>
+                  <td class="cantidad-negativa">{{ mov.cantidad }}</td>
+                  <td>{{ mov.usuario }}</td>
+                  <td>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                      <button class="btn btn-view" (click)="generarFactura(mov)">
+                        <lucide-icon [img]="FileText" class="btn-icon"></lucide-icon>
+                        Ver Comprobante
+                      </button>
+                      @if (mov.tiene_firma) {
+                        <span class="badge-firma">Firmada</span>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          
+          @if (salidasFiltradas.length === 0) {
+            <div class="empty-state">
+              <lucide-icon [img]="FileText" class="empty-icon"></lucide-icon>
+              <h3>No se encontraron salidas</h3>
+              <p>No hay registros de salidas de stock que coincidan con tu búsqueda.</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

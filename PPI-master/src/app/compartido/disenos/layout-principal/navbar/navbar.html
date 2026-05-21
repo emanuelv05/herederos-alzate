@@ -1,0 +1,50 @@
+<nav class="navbar">
+  <div class="navbar-container">
+
+    <!-- LEFT -->
+    <div class="navbar-left">
+      <button class="menu-btn" (click)="onMenuClick()">
+        <lucide-icon [img]="Menu" class="icon"></lucide-icon>
+      </button>
+
+      <button class="logo-btn" (click)="goHome()">
+        <img src="/img/LogoAzulHA.jpg" alt="Herederos Alzate" class="logo-img">
+      </button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="navbar-right">
+
+      <div class="user-box">
+        <div class="user-circle">
+          <!-- ICONO SUPERVISOR -->
+          <lucide-icon [img]="UserCog" class="icon-sm"></lucide-icon>
+        </div>
+        <span>{{ userName }}</span>
+      </div>
+
+      
+
+      <!-- Settings -->
+      <div class="settings-wrapper">
+        <button class="icon-btn" (click)="toggleSettings()">
+          <lucide-icon [img]="Settings" class="icon"></lucide-icon>
+        </button>
+
+        <!-- Dropdown -->
+        <div *ngIf="isSettingsOpen" class="dropdown">
+          <button (click)="goProfile()">
+            <lucide-icon [img]="User" class="dropdown-icon"></lucide-icon>
+            Perfil
+          </button>
+
+          <button (click)="logout()">
+            <lucide-icon [img]="LogOut" class="dropdown-icon"></lucide-icon>
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</nav>

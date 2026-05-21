@@ -1,0 +1,116 @@
+<div class="employee-page">
+  <h1 class="title">Edición de Categorías</h1>
+  <p class="subtitle">Gestiona y personaliza las agrupaciones de tus productos fácilmente.</p>
+
+  <div class="search-container">
+    <div class="search-box">
+      <lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+      <input type="text" placeholder="Buscar por código o nombre..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="statusFilter">
+        <option value="Todos">Todos los estados</option>
+        <option value="Activa">Activa</option>
+        <option value="Inactiva">Inactiva</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="selection-bar" *ngIf="selectedCount > 0">
+    <span>{{ selectedCount }} categoría(s) seleccionada(s)</span>
+
+    <div class="selection-actions">
+      <button type="button" class="btn-edit" (click)="editSelected()" *ngIf="canEditSelection">
+        <lucide-icon [img]="Pencil" class="btn-icon"></lucide-icon>
+        Editar
+      </button>
+
+      <button type="button" class="btn-delete" (click)="deleteSelected()">
+        <lucide-icon [img]="Trash2" class="btn-icon"></lucide-icon>
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-check">
+            <input
+              type="checkbox"
+              [checked]="allFilteredSelected"
+              [disabled]="showEditMenu"
+              (change)="toggleSelectAll($event)"
+            />
+          </th>
+          <th>Código</th>
+          <th>Nombre de Categoría</th>
+          <th>Descripción</th>
+          <th>Productos</th>
+          <th>Stock Total</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let cat of filteredCategories">
+          <tr>
+            <td class="col-check">
+              <input
+                type="checkbox"
+                [checked]="selectedIds.has(cat.id)"
+                [disabled]="showEditMenu && editCategoryId !== cat.id"
+                (change)="toggleSelection(cat.id, $event)"
+              />
+            </td>
+
+            <td class="strong">#{{ cat.codigo }}</td>
+            <td class="strong">{{ cat.nombre }}</td>
+            <td>{{ cat.descripcion }}</td>
+            <td>{{ cat.productos }} items</td>
+            <td>{{ cat.stockTotal }} pz</td>
+            <td>
+              <span [class]="'status-pill ' + getStatusClass(cat.estado)">
+                {{ cat.estado }}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Fila Desplegable de Edición -->
+          <tr class="edit-dropdown-row" *ngIf="showEditMenu && editCategoryId === cat.id">
+            <td></td>
+            <td colspan="6">
+              <div class="edit-dropdown">
+                <div class="edit-dropdown-header">Editar Categoría</div>
+
+                <div class="edit-grid">
+                  <div class="input-group">
+                    <label>Código (No Editable)</label>
+                    <input type="text" [(ngModel)]="editForm.codigo" readonly />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Nombre de la Categoría</label>
+                    <input type="text" [(ngModel)]="editForm.nombre" />
+                  </div>
+
+                  <div class="input-group full-width">
+                    <label>Descripción</label>
+                    <input type="text" [(ngModel)]="editForm.descripcion" />
+                  </div>
+                </div>
+
+                <div class="edit-actions">
+                  <button type="button" class="btn-cancel" (click)="closeEditMenu()">Cancelar</button>
+                  <button type="button" class="btn-save" (click)="saveEditMenu()">Guardar cambios</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

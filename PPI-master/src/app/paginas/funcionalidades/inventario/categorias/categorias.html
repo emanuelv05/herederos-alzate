@@ -1,0 +1,107 @@
+<section class="categories-wrap">
+	<header class="hero-card">
+		<div>
+			<h1>Gestión de Categorías</h1>
+			<p>Organiza tu calzado por categorías</p>
+		</div>
+	</header>
+
+	<section class="panel-card">
+		<div class="search-container">
+			<div class="search-box">
+				<lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+				<input type="text" placeholder="Buscar por código o nombre..." [(ngModel)]="searchText">
+			</div>
+
+			<div class="filter-box">
+				<select [(ngModel)]="statusFilter">
+					<option>Todos los estados</option>
+					<option>Activa</option>
+					<option>Inactiva</option>
+				</select>
+			</div>
+
+			<button *ngIf="!isUsuario()" class="btn btn-ghost btn-add-category" type="button" (click)="openAddCategory()">
+				<lucide-icon [img]="Plus" class="btn-icon"></lucide-icon>
+				Agregar categoría
+			</button>
+		</div>
+
+		<div class="category-table">
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Código</th>
+							<th>Nombre</th>
+							<th>Descripción</th>
+							<th>Estado</th>
+							<th *ngIf="!isUsuario()">Acciones</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<ng-container *ngFor="let category of filteredCategories">
+						<tr>
+							<td class="strong">#{{ category.codigo }}</td>
+							<td class="strong">{{ category.nombre }}</td>
+							<td>{{ category.descripcion }}</td>
+							<td>
+								<span [class]="'status-pill ' + getStatusClass(category.estado)">
+									{{ category.estado }}
+								</span>
+							</td>
+							<td *ngIf="!isUsuario()">
+								<div class="actions">
+									<button class="action-btn btn-edit" type="button" (click)="editCategory(category)">
+										<lucide-icon [img]="Pencil" class="action-icon"></lucide-icon>
+									</button>
+									<button class="action-btn btn-delete" type="button" (click)="deleteCategory(category)">
+										<lucide-icon [img]="Trash2" class="action-icon"></lucide-icon>
+									</button>
+								</div>
+							</td>
+						</tr>
+
+						<!-- Fila Desplegable de Edición -->
+						<tr class="edit-dropdown-row" *ngIf="!isUsuario() && editCategoryId === category.id">
+							<td colspan="5" style="padding: 0;">
+								<div class="edit-dropdown" style="margin: 10px;">
+									<div class="edit-dropdown-header">Editar Categoría</div>
+
+									<div class="edit-grid">
+										<div class="input-group">
+											<label>Código (No Editable)</label>
+											<input type="text" [value]="category.codigo" readonly />
+										</div>
+
+										<div class="input-group">
+											<label>Nombre de la Categoría</label>
+											<input type="text" [(ngModel)]="editForm.nombre" />
+										</div>
+
+										<div class="input-group full-width">
+											<label>Descripción</label>
+											<input type="text" [(ngModel)]="editForm.descripcion" />
+										</div>
+									</div>
+
+									<div class="edit-actions">
+										<button type="button" class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+										<button type="button" class="btn-save" (click)="saveEdit()">Guardar cambios</button>
+									</div>
+								</div>
+							</td>
+						</tr>
+						</ng-container>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<app-nueva-categoria
+		*ngIf="showAddCategory"
+		(close)="closeAddCategory()"
+	></app-nueva-categoria>
+</section>

@@ -1,0 +1,61 @@
+<div class="add-supplier-backdrop" (click)="onClose()">
+  <section class="add-supplier-card" (click)="$event.stopPropagation()">
+    <header class="card-header">
+      <div class="card-title">
+        <span class="icon-badge">
+          <lucide-icon [img]="Briefcase" class="title-icon"></lucide-icon>
+        </span>
+        <div>
+          <h3>Agregar Proveedor</h3>
+        </div>
+      </div>
+      <button class="icon-btn" type="button" aria-label="Cerrar" (click)="onClose()">
+        <lucide-icon [img]="X" class="close-icon"></lucide-icon>
+      </button>
+    </header>
+
+    <div class="divider"></div>
+
+    <div class="form-grid">
+      <label class="field">
+        <span>Código</span>
+        <input type="text" placeholder="Ej: PROV004" [(ngModel)]="form.codigo" />
+      </label>
+
+      <label class="field">
+        <span>Empresa</span>
+        <input type="text" placeholder="Nombre de empresa" [(ngModel)]="form.nombre_empresa" />
+      </label>
+
+      <label class="field">
+        <span>Nombre Proveedor</span>
+        <input type="text" placeholder="Nombre del contacto" [(ngModel)]="form.nombre_proveedor" />
+      </label>
+
+      <label class="field">
+        <span>Teléfono</span>
+        <input type="tel" placeholder="+57 300 000 0000" [(ngModel)]="form.telefono" />
+      </label>
+
+      <label class="field">
+        <span>Correo</span>
+        <input type="email" placeholder="correo@empresa.com" [(ngModel)]="form.mail" />
+      </label>
+
+      <label class="field">
+        <span>Ciudad</span>
+        <input type="text" placeholder="Ciudad" [(ngModel)]="form.ciudad" />
+      </label>
+
+      <label class="field">
+        <span>Dirección</span>
+        <input type="text" placeholder="Avenida X" [(ngModel)]="form.direccion" />
+      </label>
+    </div>
+
+    <footer class="form-actions">
+      <button class="btn btn-ghost" type="button" (click)="onClose()">Cancelar</button>
+      <button class="btn btn-primary" type="button" (click)="agregar()">Agregar</button>
+    </footer>
+  </section>
+</div>

@@ -1,0 +1,19 @@
+<div class="layout-wrapper">
+  <!-- Banner superior -->
+  <div class="header-banner">
+    <img src="/img/FooterHA.jpg" alt="Herederos Alzate" class="banner-img">
+  </div>
+
+  <app-usuario-navbar (menuClick)="toggleSidebar()"></app-usuario-navbar>
+
+  <app-usuario-sidebar
+    [isExpanded]="isSidebarExpanded"
+    (menuNavigate)="collapseSidebar()"
+  ></app-usuario-sidebar>
+
+  <div class="main-content" [class.sidebar-expanded]="isSidebarExpanded">
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-footer></app-footer>
+</div>

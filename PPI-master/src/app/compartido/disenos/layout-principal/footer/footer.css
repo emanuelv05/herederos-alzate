@@ -1,0 +1,25 @@
+.footer {
+  background: #0071bc;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  margin-top: auto;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-text {
+  margin: 0 0 5px 0;
+  font-size: 13px;
+  opacity: 0.95;
+}
+
+.footer-company {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+}

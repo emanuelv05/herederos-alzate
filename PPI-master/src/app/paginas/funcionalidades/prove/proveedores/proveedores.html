@@ -1,0 +1,136 @@
+<section class="providers-wrap">
+	<header class="hero-card">
+		<div>
+			<h1>Proveedores</h1>
+			<p>Administra tus proveedores de calzado</p>
+		</div>
+	</header>
+
+	<section class="supplier-card">
+		<div class="search-container">
+			<div class="search-box">
+				<lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+				<input type="text" placeholder="Buscar por código o empresa..." [(ngModel)]="searchText">
+			</div>
+
+			<div class="filter-box">
+				<select [(ngModel)]="statusFilter">
+					<option>Todos los estados</option>
+					<option>Activo</option>
+					<option>Inactivo</option>
+				</select>
+			</div>
+
+			<button *ngIf="!isUsuario()" class="btn btn-ghost btn-add-supplier" type="button" (click)="openAddSupplier()">
+				<lucide-icon [img]="Plus" class="btn-icon"></lucide-icon>
+				Agregar proveedor
+			</button>
+		</div>
+
+		<div class="supplier-table">
+			<table>
+				<thead>
+					<tr>
+						<th>Código</th>
+						<th>Empresa</th>
+						<th>Nombre Proveedor</th>
+						<th>Teléfono</th>
+						<th>Correo</th>
+						<th>Ciudad</th>
+						<th>Dirección</th>
+						<th>Estado</th>
+						<th *ngIf="!isUsuario()">Acciones</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<ng-container *ngFor="let provider of filteredProviders">
+					<tr>
+						<td class="strong">#{{ provider.codigo }}</td>
+						<td class="strong">{{ provider.nombre_empresa }}</td>
+						<td>{{ provider.nombre_proveedor }}</td>
+						<td>{{ provider.telefono }}</td>
+						<td>{{ provider.mail }}</td>
+						<td>{{ provider.ciudad }}</td>
+						<td>{{ provider.direccion }}</td>
+						<td>
+							<span [class]="'status-pill ' + getStatusClass(provider.estado)">
+								{{ provider.estado }}
+							</span>
+						</td>
+						<td *ngIf="!isUsuario()">
+							<div class="actions">
+								<button class="action-btn btn-edit" type="button" (click)="editProvider(provider)">
+									<lucide-icon [img]="Pencil" class="action-icon"></lucide-icon>
+								</button>
+								<button class="action-btn btn-delete" type="button" (click)="deleteProvider(provider)">
+									<lucide-icon [img]="Trash2" class="action-icon"></lucide-icon>
+								</button>
+								<button class="action-btn btn-refresh" type="button" (click)="cargarProveedores()">
+									<lucide-icon [img]="RefreshCw" class="action-icon"></lucide-icon>
+								</button>
+							</div>
+						</td>
+					</tr>
+
+					<!-- Fila Desplegable de Edición -->
+					<tr class="edit-dropdown-row" *ngIf="!isUsuario() && editProviderId === provider.id">
+						<td colspan="9" style="padding: 0;">
+							<div class="edit-dropdown" style="margin: 10px;">
+								<div class="edit-dropdown-header">Editar Proveedor</div>
+
+								<div class="edit-grid">
+									<div class="input-group">
+										<label>Código (No Editable)</label>
+										<input type="text" [value]="provider.codigo" readonly />
+									</div>
+
+									<div class="input-group">
+										<label>Empresa</label>
+										<input type="text" [(ngModel)]="editForm.nombre_empresa" />
+									</div>
+
+									<div class="input-group">
+										<label>Nombre Proveedor</label>
+										<input type="text" [(ngModel)]="editForm.nombre_proveedor" />
+									</div>
+
+									<div class="input-group">
+										<label>Teléfono</label>
+										<input type="text" [(ngModel)]="editForm.telefono" />
+									</div>
+
+									<div class="input-group">
+										<label>Correo</label>
+										<input type="email" [(ngModel)]="editForm.mail" />
+									</div>
+
+									<div class="input-group">
+										<label>Ciudad</label>
+										<input type="text" [(ngModel)]="editForm.ciudad" />
+									</div>
+
+									<div class="input-group">
+										<label>Dirección</label>
+										<input type="text" [(ngModel)]="editForm.direccion" />
+									</div>
+								</div>
+
+								<div class="edit-actions">
+									<button type="button" class="btn-cancel" (click)="cancelEdit()">Cancelar</button>
+									<button type="button" class="btn-save" (click)="saveEdit()">Guardar cambios</button>
+								</div>
+							</div>
+						</td>
+					</tr>
+					</ng-container>
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<app-agregar-proveedor
+		*ngIf="showAddSupplier"
+		(close)="closeAddSupplier()"
+	></app-agregar-proveedor>
+</section>

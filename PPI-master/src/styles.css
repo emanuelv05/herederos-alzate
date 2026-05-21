@@ -1,0 +1,117 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Raleway', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  min-height: 100dvh;
+  background: #ffffff;
+}
+
+lucide-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+lucide-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+lucide-icon.search-icon,
+lucide-icon.btn-icon,
+lucide-icon.action-icon,
+lucide-icon.menu-icon,
+lucide-icon.compact-icon,
+lucide-icon.icon,
+lucide-icon.icon-sm,
+lucide-icon.dropdown-icon,
+lucide-icon.input-icon,
+lucide-icon.eye-icon,
+lucide-icon.title-icon,
+lucide-icon.close-icon,
+lucide-icon.avatar-icon,
+lucide-icon.history-icon,
+lucide-icon.modal-close-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tema por rol: usuario (empleado) */
+body.role-usuario .hero-card,
+body.role-usuario .title-row {
+  background: linear-gradient(90deg, #338dc9, #0071bc) !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 18px rgba(20, 83, 45, 0.28) !important;
+}
+
+body.role-usuario .hero-card h1,
+body.role-usuario .hero-card p,
+body.role-usuario .title,
+body.role-usuario .subtitle {
+  color: #ffffff !important;
+}
+
+body.role-usuario .btn-primary,
+body.role-usuario .btn-save,
+body.role-usuario .btn-register,
+body.role-usuario .btn-add-employee,
+body.role-usuario .btn-add-category,
+body.role-usuario .btn-add-shoe,
+body.role-usuario .btn-add-supplier,
+body.role-usuario .btn-entrada,
+body.role-usuario .btn-cyan,
+body.role-usuario .btn-amber,
+body.role-usuario .btn-login,
+body.role-usuario .btn-reset,
+body.role-usuario .btn-verify {
+  background-color: #303030 !important;
+  color: #ffffff !important;
+  border-color: #303030 !important;
+}
+
+body.role-usuario .btn-primary:hover,
+body.role-usuario .btn-save:hover,
+body.role-usuario .btn-register:hover,
+body.role-usuario .btn-add-employee:hover,
+body.role-usuario .btn-add-category:hover,
+body.role-usuario .btn-add-shoe:hover,
+body.role-usuario .btn-add-supplier:hover,
+body.role-usuario .btn-entrada:hover,
+body.role-usuario .btn-cyan:hover,
+body.role-usuario .btn-amber:hover,
+body.role-usuario .btn-login:hover,
+body.role-usuario .btn-reset:hover,
+body.role-usuario .btn-verify:hover {
+  background-color: #303030 !important;
+  border-color: #303030 !important;
+}
+
+body.role-usuario .btn-ghost,
+body.role-usuario .btn-cancel,
+body.role-usuario .btn-back,
+body.role-usuario .btn-minimal {
+  border-color: #303030 !important;
+  color: #303030 !important;
+}
+
+body.role-usuario .footer {
+  background: #303030 !important;
+}
+
+/* Fix SweetAlert showing behind high z-index modals */
+.swal2-container {
+  z-index: 100000 !important;
+}

@@ -1,0 +1,197 @@
+<div class="employee-page">
+  <h1 class="title">Empleados</h1>
+  <p class="subtitle">Gestiona estados y agrega nuevos empleados desde una sola vista.</p>
+
+  <div class="search-container">
+    <div class="search-box">
+      <lucide-icon [img]="Search" class="search-icon"></lucide-icon>
+      <input type="text" placeholder="Buscar por usuario o cédula..." [(ngModel)]="searchTerm" />
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="statusFilter">
+        <option value="Todos">Todos los estados</option>
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
+      </select>
+    </div>
+
+    <button type="button" class="btn-add-employee" (click)="openAddEmployeeModal()">
+      <lucide-icon [img]="UserPlus" class="btn-icon"></lucide-icon>
+      Agregar empleado
+    </button>
+  </div>
+
+  <div class="selection-bar" *ngIf="selectedCount > 0">
+    <span>{{ selectedCount }} usuario(s) seleccionado(s)</span>
+
+    <div class="selection-actions">
+      <button type="button" class="btn-edit" (click)="editSelected()" *ngIf="canEditSelection">
+        <lucide-icon [img]="Pencil" class="btn-icon"></lucide-icon>
+        Editar
+      </button>
+
+      <button type="button" class="btn-delete" (click)="deleteSelected()">
+        <lucide-icon [img]="Trash2" class="btn-icon"></lucide-icon>
+        Eliminar
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-check">
+            <input
+              type="checkbox"
+              [checked]="allFilteredSelected"
+              [disabled]="showEditMenu"
+              (change)="toggleSelectAll($event)"
+            />
+          </th>
+          <th>Usuario</th>
+          <th>Cedula</th>
+          <th>Status</th>
+          <th>Última conexión</th>
+          <th>History</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <ng-container *ngFor="let employee of filteredEmployees">
+          <tr>
+            <td class="col-check">
+              <input
+                type="checkbox"
+                [checked]="selectedIds.has(employee.id)"
+                [disabled]="showEditMenu && editEmployeeId !== employee.id"
+                (change)="toggleSelection(employee.id, $event)"
+              />
+            </td>
+
+            <td>
+              <span>{{ employee.usuario }}</span>
+            </td>
+
+            <td>
+              <span>{{ employee.cedula }}</span>
+            </td>
+
+            <td>
+              <button
+                type="button"
+                class="status-btn"
+                [class.active]="employee.status === 'Activo'"
+                [class.inactive]="employee.status === 'Inactivo'"
+                (click)="toggleStatus(employee.id)"
+              >
+                {{ employee.status }}
+              </button>
+            </td>
+
+            <td>{{ employee.ultimaConexion }}</td>
+
+            <td>
+              <div class="history-wrapper">
+                <button type="button" class="history-btn" (click)="toggleHistoryMenu(employee.id)">
+                  <lucide-icon [img]="History" class="history-icon"></lucide-icon>
+                </button>
+
+                <!-- ✅ ACTUALIZADO: muestra fecha ingreso, última conexión y cambios de sesión -->
+                <div class="history-panel" *ngIf="isHistoryOpen(employee.id)">
+                  <h4>Registro</h4>
+                  <p class="history-user">{{ employee.usuario }}</p>
+
+                  <ul class="history-list">
+                    <li><strong>Fecha ingreso:</strong> {{ employee.fechaIngreso }}</li>
+                    <li><strong>Última conexión:</strong> {{ employee.ultimaConexion }}</li>
+                  </ul>
+
+                  <div *ngIf="employee.history.length > 0">
+                    <p style="margin-top: 8px; font-weight: 600;">Cambios en sesión:</p>
+                    <ul class="history-list">
+                      <li *ngFor="let item of employee.history">{{ item }}</li>
+                    </ul>
+                  </div>
+                </div>
+
+              </div>
+            </td>
+          </tr>
+
+          <tr class="edit-dropdown-row" *ngIf="showEditMenu && editEmployeeId === employee.id">
+            <td></td>
+            <td colspan="5">
+              <div class="edit-dropdown">
+                <div class="edit-dropdown-header">Editar empleado</div>
+
+                <div class="edit-grid">
+                  <div class="input-group">
+                    <label>Nombre completo</label>
+                    <input type="text" [(ngModel)]="editForm.nombreCompleto" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Apellido completo</label>
+                    <input type="text" [(ngModel)]="editForm.apellidoCompleto" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Usuario</label>
+                    <input type="text" [(ngModel)]="editForm.usuario" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Fecha ingreso</label>
+                    <input type="date" [(ngModel)]="editForm.fechaIngreso" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Cédula</label>
+                    <input type="text" [(ngModel)]="editForm.cedula" readonly />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Correo personal</label>
+                    <input type="email" [(ngModel)]="editForm.correoPersonal" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Nueva contraseña (opcional)</label>
+                    <input type="password" [(ngModel)]="editForm.nuevaContrasena" />
+                  </div>
+
+                  <div class="input-group">
+                    <label>Confirmar contraseña</label>
+                    <input type="password" [(ngModel)]="editForm.confirmarContrasena" />
+                  </div>
+                </div>
+
+                <div class="edit-actions">
+                  <button type="button" class="btn-cancel" (click)="closeEditMenu()">Cancelar</button>
+                  <button type="button" class="btn-save" (click)="saveEditMenu()">Guardar cambios</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showAddEmployeeModal" (click)="closeAddEmployeeModal()">
+    <div class="add-modal" (click)="$event.stopPropagation()">
+      <button type="button" class="modal-close floating-close" (click)="closeAddEmployeeModal()">
+        <lucide-icon [img]="X" class="modal-close-icon"></lucide-icon>
+      </button>
+
+      <div class="modal-component-wrapper">
+        <app-registrar-empleado
+          (close)="closeAddEmployeeModal()"
+          (empleadoRegistrado)="onEmpleadoRegistrado()"
+        ></app-registrar-empleado>
+      </div>
+    </div>
+  </div>
+</div>

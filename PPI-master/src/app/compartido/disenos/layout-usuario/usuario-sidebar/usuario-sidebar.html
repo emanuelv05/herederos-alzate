@@ -1,0 +1,80 @@
+<div class="sidebar-shell" [class.expanded]="isExpanded">
+  <div *ngIf="!isExpanded" class="sidebar-compact">
+    <!-- Gestión -->
+    <div class="compact-group">
+      <button class="compact-btn" [class.active]="isActive('/usuario/calzado')" (click)="goCalzado()" data-tooltip="Calzado" title="Calzado">
+        <lucide-icon [img]="PackageSearch" class="compact-icon"></lucide-icon>
+      </button>
+
+      <button class="compact-btn" [class.active]="isActive('/usuario/categorias')" (click)="goCategorias()" data-tooltip="Categorías" title="Categorías">
+        <lucide-icon [img]="Tag" class="compact-icon"></lucide-icon>
+      </button>
+
+      <button class="compact-btn" [class.active]="isActive('/usuario/proveedores')" (click)="goProveedores()" data-tooltip="Proveedores" title="Proveedores">
+        <lucide-icon [img]="Truck" class="compact-icon"></lucide-icon>
+      </button>
+    </div>
+
+    <div class="compact-separator"></div>
+
+    <!-- Operación -->
+    <div class="compact-group">
+      <button class="compact-btn" [class.active]="isActive('/usuario/movimiento-stock')" (click)="goMovimientoStock()" data-tooltip="Movimiento Stock" title="Movimiento Stock">
+        <lucide-icon [img]="ArrowLeftRight" class="compact-icon"></lucide-icon>
+      </button>
+      <button class="compact-btn" [class.active]="isActive('/usuario/facturacion')" (click)="goFacturacion()" data-tooltip="Facturación" title="Facturación">
+        <lucide-icon [img]="FileText" class="compact-icon"></lucide-icon>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isExpanded" class="sidebar">
+    <div class="sidebar-header">
+      <h2>Menú</h2>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-top">
+        <div class="user-avatar">
+          <lucide-icon [img]="UserCheck" class="avatar-icon"></lucide-icon>
+        </div>
+
+        <div class="user-info">
+          <h3>{{ userName }}</h3>
+          <p class="user-role">Empleado</p>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-menu">
+      <p class="menu-section-title">Gestión</p>
+
+      <button class="menu-btn" [class.active]="isActive('/usuario/calzado')" (click)="goCalzado()">
+        <lucide-icon [img]="PackageSearch" class="menu-icon"></lucide-icon>
+        <span>Calzado</span>
+      </button>
+
+      <button class="menu-btn" [class.active]="isActive('/usuario/categorias')" (click)="goCategorias()">
+        <lucide-icon [img]="Tag" class="menu-icon"></lucide-icon>
+        <span>Categorías</span>
+      </button>
+
+      <button class="menu-btn" [class.active]="isActive('/usuario/proveedores')" (click)="goProveedores()">
+        <lucide-icon [img]="Truck" class="menu-icon"></lucide-icon>
+        <span>Proveedores</span>
+      </button>
+
+      <p class="menu-section-title">Operación</p>
+
+      <button class="menu-btn" [class.active]="isActive('/usuario/movimiento-stock')" (click)="goMovimientoStock()">
+        <lucide-icon [img]="ArrowLeftRight" class="menu-icon"></lucide-icon>
+        <span>Movimiento Stock</span>
+      </button>
+
+      <button class="menu-btn" [class.active]="isActive('/usuario/facturacion')" (click)="goFacturacion()">
+        <lucide-icon [img]="FileText" class="menu-icon"></lucide-icon>
+        <span>Facturación</span>
+      </button>
+    </nav>
+  </div>
+</div>
