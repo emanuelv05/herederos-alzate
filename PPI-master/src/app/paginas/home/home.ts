@@ -93,7 +93,7 @@ export class HomeComponent implements OnInit {
                   talla: v.talla,
                   color: v.color,
                   stock_actual: v.stock_actual,
-                  nombre_proveedor: m.nombre_proveedor
+                  nombre_proveedor: v.nombre_proveedor || m.nombre_proveedor || ''
                 });
               }
             });
